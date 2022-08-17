@@ -37,7 +37,7 @@ public class CalculadoraEnvios extends JFrame {
 	private JRadioButton rbdNacionalD;
 	private JRadioButton rbdExtranjeroD;
 	private JRadioButton rbdExtrajeroO;
-
+	
 	/**
 	 * Launch the application.
 	 */
@@ -58,6 +58,7 @@ public class CalculadoraEnvios extends JFrame {
 	 * Create the frame.
 	 */
 	public CalculadoraEnvios() {
+		setFont(new Font("Comic Sans MS", Font.PLAIN, 14));
 		setTitle("Calculadora de Envios");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -66,7 +67,7 @@ public class CalculadoraEnvios extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(new MigLayout("", "[][][grow][]", "[][][][][][][][][]"));
 		
-		JLabel lblNewLabel = new JLabel("Ciudada Origen:");
+		JLabel lblNewLabel = new JLabel("Ciudad Origen:");
 		lblNewLabel.setFont(new Font("Verdana", Font.PLAIN, 14));
 		contentPane.add(lblNewLabel, "cell 1 1,alignx trailing");
 		
@@ -106,7 +107,7 @@ public class CalculadoraEnvios extends JFrame {
 		contentPane.add(lblNewLabel_2, "cell 1 5,alignx trailing");
 		
 		comboTipo = new JComboBox();
-		comboTipo.setModel(new DefaultComboBoxModel(new String[] {"Pag 10 - Antes de las 10 h", "Pag 14 - Antes de las 14 h", "Pag 24 - Al día siguiente"}));
+		comboTipo.setModel(new DefaultComboBoxModel(new String[] {"Paq 10 - Antes de las 10 h", "Paq 14 - Antes de las 14 h", "Paq 24 - Al día siguiente"}));
 		comboTipo.setFont(new Font("Verdana", Font.PLAIN, 14));
 		contentPane.add(comboTipo, "cell 2 5,growx");
 		
@@ -117,7 +118,7 @@ public class CalculadoraEnvios extends JFrame {
 		spinnerPeso = new JSpinner();
 		spinnerPeso.setModel(new SpinnerNumberModel(1, 1, 40, 1));
 		spinnerPeso.setFont(new Font("Verdana", Font.PLAIN, 14));
-		contentPane.add(spinnerPeso, "cell 2 6");
+		contentPane.add(spinnerPeso, "flowx,cell 2 6");
 		
 		rbdExtrajeroO = new JRadioButton("Extranjero");
 		grupoOrigen.add(rbdExtrajeroO);
@@ -130,28 +131,39 @@ public class CalculadoraEnvios extends JFrame {
 		JButton btnCalcularPrecio = new JButton("Calcular Precio");
 		btnCalcularPrecio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ValidarPrecio();
+				validarYcalcularEnvio();
 			}
 			
 		});
 		btnCalcularPrecio.setFont(new Font("Verdana", Font.PLAIN, 14));
 		panel.add(btnCalcularPrecio);
+		
+		JLabel lblNewLabel_4 = new JLabel("Kg");
+		lblNewLabel_4.setFont(new Font("Verdana", Font.PLAIN, 14));
+		contentPane.add(lblNewLabel_4, "cell 2 6");
 	}
 
-	protected void ValidarPrecio() {
+	protected void validarYcalcularEnvio() {
+		
 		if(txtCiudadO.getText() == null || txtCiudadO.getText().isBlank() ||
 				txtCiudadD.getText() == null || txtCiudadD.getText().isBlank()) {
-			JOptionPane.showMessageDialog(this, "Debe introducir los datos de origen y destino",
+			JOptionPane.showMessageDialog(this, 
+					"Debe introducir los datos de origen y destino",
 					"Compruebe los datos",JOptionPane.WARNING_MESSAGE);
+			return;
 		}
-		String ciudadO = txtCiudadO.getText();
 		
+		String ciudadO = txtCiudadO.getText();
 		String ciudadD = txtCiudadD.getText();
+		boolean nacionalOrigen = rbdNacionalO.isSelected();
+		boolean nacionalDestino = rbdNacionalD.isSelected();
 		String tipoEnvio = (String) comboTipo.getSelectedItem();
 		int peso = (int) spinnerPeso.getValue();
 		
-		Envio e = new Envio("Montilla",true,"Cordoba",true,"Antes de las 10 h",5);
+		Envio e = new Envio(ciudadO, nacionalOrigen,ciudadD,nacionalDestino,tipoEnvio,peso);
 		
+		JOptionPane.showMessageDialog(this, "El importe total es: " + e.calculaImporte(),
+				"Importe del envio", JOptionPane.INFORMATION_MESSAGE);
 		
 	}
 

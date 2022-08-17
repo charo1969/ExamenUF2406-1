@@ -97,27 +97,24 @@ public class Envio {
 				+ "]";
 	}
 	
-	protected void calculaImporte() {
+	public double calculaImporte() {
 		
 		double precio = 7;
 		double recargoPeso = 3.5;
-		if(this.origenNacional==true && this.destinoNacional==true) {
+		
+		if(this.origenNacional && this.destinoNacional) {
 			precio = 4;
-			
-			
+		
 		}
-		if(tipoEnvio.equals("Antes de las 10 h")) {
+		if(tipoEnvio.equals("Paq 10 - Antes de las 10 h")) {
 			precio = precio +5;
-		}else if(tipoEnvio.equals("Antes de las 14 h")) {
+		}else if(tipoEnvio.equals("Paq 14 - Antes de las 14 h")) {
 			precio =precio +2;
 			
 		}
-		if(this.peso > 10) {
-			precio = precio + recargoPeso;
-			
-		}
-		
-		
+		precio = precio + peso/10 * recargoPeso;
+		return precio;
+
 	}
 	
 	
